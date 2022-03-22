@@ -1,48 +1,25 @@
-from time import sleep
-from selenium.webdriver.chrome.service import Service
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from keyboard import press
+import tweepy
 
+#get all the relevant info from the user
+consumer_key = input("\nPlease introduce your consumer key: ")
+consumer_secret = input("\nPlease introduce your consumer secret: ")
+access_token = input("\nPlease introduce your acess token: ")
+access_token_secret = input("\nPlease introduce your access token secret: ")
 
+#authentication 
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
 
+print("\nLaunching api...")
 
-url = 'https://twitter.com/i/flow/login'
+#launch api
+api = tweepy.API(auth)
 
-email = input("Please enter your twitter email: ")
-print("\n")
-password = input("Please enter your twitter password: ")
+#get the tweet from the user
+tweet = "Good Morning!"
 
-#instantiate the chrome class web
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service = service)
-wait = WebDriverWait(driver, 30)
+#tweet
+print("\nTweeting...")
+status = api.update_status(tweet)
 
-#maximize the chrome windows to full-screen
-driver.maximize_window()
-
-#open twitter 
-driver.get(url)
-
-#application waits for the email field to be visibles
-wait.until(EC.visibility_of_element_located((By.NAME, "text")))
-
-#write the email
-driver.find_element(by=By.NAME, value='text').send_keys(email)
-
-#click on advance
-press('enter')
-
-#application waits for the email field to be visibles
-wait.until(EC.visibility_of_element_located((By.NAME, "password")))
-
-#write the password
-driver.find_element(by=By.NAME, value='password').send_keys(password)
-
-#click on login
-press('enter')
-
-sleep(10)
+print("\n\nTwitter status updated!")
